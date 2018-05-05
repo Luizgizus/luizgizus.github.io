@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt_br" ng-app="minhasFinancas">
+	<head>
+		<meta charset="utf-8">
+		<meta name="author" content="Bruna Silva, Luiz Jesus">
+		<title>Minhas finanças</title>
+		<link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+		<link href="./node_modules/bootstrap/dist/css/bootstrap-grid.min.css" rel="stylesheet">
+		<link href="./node_modules/bootstrap/dist/css/bootstrap-reboot.min.css" rel="stylesheet">
+		<link href="./node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+		<link href="./dist/css/main.css" rel="stylesheet">
+		<link href="./node_modules/ng-dialog/css/ngDialog.min.css" rel="stylesheet">
+		<link href="./node_modules/ng-dialog/css/ngDialog-theme-default.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="./node_modules/angular-toastr/dist/angular-toastr.min.css" />
+
+		<script src="./dist/app-release.js"></script>
+	</head>
+
+	<body ng-controller="FinancasCtrl">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<div class="container">
+				<a class="navbar-brand" href="#">Minhas finanças</a>
+				<a class="navbar-brand" href="" ng-click="openModalAbout()">Sobre</a>
+			</div>
+		</nav>
+		<div class="container-fluid">
+			<div class="box-container">
+				<div class="row">
+					<div class="col-2">
+						<div class="row">
+							<div class="col-12">
+								<h1 class="main-title">Novo</h1>
+							</div>
+						</div>
+
+						<div>
+							<div class="add-group">
+								<span class="plus-button plus-button-grey blue-color">
+									<i class="fa fa-plus"></i>
+								</span>
+							</div>
+							<button class="btn btn-block blue-color" ng-click="openModalCreate('gastos')">
+								Criar Gasto
+							</button>
+						</div>
+
+						<div>
+							<div class="add-group">
+								<span class="plus-button plus-button-grey blue-color">
+									<i class="fa fa-plus"></i>
+								</span>
+							</div>
+							<button class="btn btn-block blue-color" ng-click="openModalCreate('receitas')">
+								Criar Receita
+							</button>
+						</div>
+
+						<div>
+							<div class="add-group">
+								<span class="plus-button plus-button-grey blue-color">
+									<i class="fa fa-plus"></i>
+								</span>
+							</div>
+							<button class="btn btn-block blue-color" ng-click="openModalCreate('investimentos')">
+								Criar Investimento
+							</button>
+						</div>
+					</div>
+
+					<div class="col-4">
+						<div class="row">
+							<div class="col-12 text-center">
+								<h1 class="main-title">Gráfico</h1>
+							</div>
+							<div id="categoryGraph" style="width:350px;height:300px;margin-left: 100px;"></div>
+						</div>
+					</div>	
+
+					<div class="col-6">
+						<div class="row">
+							<div class="col-12">
+								<h1 class="main-title">Lista de Dados</h1>
+							</div>
+
+							<div class="col-12">
+								<table class="table table-hover table-striped table-bordered">
+									<thead>
+										<tr>
+											<th>Nome</th>
+											<th>Tipo de finança</th>
+											<th>Categoria</th>
+											<th>Tipo</th>
+											<th>Valor</th>
+											<th class="text-center">Ação</th>
+										</tr>
+									</thead>
+										<tr ng-repeat="data in financeData.list">
+											<td>{{data.name}}</td>
+											<td>{{data.tipo}}</td>
+											<td>{{data.category.nome}}</td>
+											<td>{{data.category.tipo}}</td>
+											<td>{{data.value}}</td>
+											<td class="text-center">
+												<button class="btn btn-danger btn-small" ng-click="openModalConfirm(data)">
+													<i class="fa fa-trash"></i>
+												</button>
+											</td>
+										</tr>
+										<tr ng-if="!financeData.list.length">
+											<td colspan="6">Nenhum Dado Cadastrado</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br/><br/>
+				<div class="row">
+					<div class="col-12">
+						<h1 class="main-title">Análisar Finanças</h1>
+					</div>
+
+					<div class="col-3">
+						<button class="btn btn-outline-info" ng-click="makeAnalisis()">
+							Gerar Analise das Finanças
+						</button>
+					</div>
+					<br><br><br>
+					<div class="col-9 form-group"></div>
+
+					<div ng-repeat="GastoAnormal in gastoAnormalList" ng-if="hasAnalise" class="col-3">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">{{GastoAnormal}}</h5>
+								<p class="card-text">
+									Parece que você tem gastado mais com <b>{{GastoAnormal}}</b>,
+									<br><br>o que pode ocasionar em um desequilíbrio da sua vida
+									financeira. Que tal ler um pouco mais sobre a metodologia 50-15-35? <a href="http://www.oseudinheirovalemais.com.br/transforme-sua-vida-financeira-com-a-regra-dos-50-15-35/" target="_blank">Clique aqui</a> para 
+									saber mais sobre.
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<div ng-if="hasAnalise && !gastoAnormalList.length" class="col-3">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Parabéns</h5>
+								<p class="card-text">
+									Todos os seus gastos estão dentro da média! Parabéns!
+								</p>
+								<br>
+								<p>
+									Continue acompanhando sua média mensalmente
+									pelo nosso site.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
