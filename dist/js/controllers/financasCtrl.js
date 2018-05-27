@@ -2,7 +2,7 @@ const app = angular.module("minhasFinancas")
 let echarts = require('echarts')
 
 app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
-    ($scope, Notify, toastr)=>{
+    ($scope, Notify, toastr) => {
         $scope.idFinance = 1
 
         $scope.created = {
@@ -16,106 +16,200 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
         $scope.financeData = {
             list: [],
             graphData: [
-                {value:0, name:'Gastos'},
-                {value:0, name:'Receitas'},
-                {value:0, name:'Investimentos'}
-            ]
+                { value: 0, name: 'Gastos' },
+                { value: 0, name: 'Receitas' },
+                { value: 0, name: 'Investimentos' }
+            ],
+            graphBarData: {
+                "alimentação": 0,
+                "automóvel": 0,
+                "beleza": 0,
+                "bem estar": 0,
+                "educação": 0,
+                "empregados": 0,
+                "familiares": 0,
+                "impostos e tarifas": 0,
+                "lazer": 0,
+                "moradia": 0,
+                "outras": 0,
+                "pessoais": 0,
+                "previdência": 0,
+                "saúde": 0,
+                "seguro": 0,
+                "telefonia/tv/internet": 0,
+                "transporte": 0,
+                "vestuário": 0,
+                "aluguel": 0,
+                "lucros": 0,
+                "pró-labore": 0,
+                "rendimentos": 0,
+                "salário": 0,
+                "investimento/consórcio": 0,
+                "investimento/poupança": 0,
+                "quitação de dívidas": 0
+            }
         }
 
         let optionsPieGraph = {
-            title : {
-                text: 'Finanças por categoria',
-                x:'center'
-            },
-            tooltip : {
+            tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b} : R${c} ({d}%)"
             },
-            legend: {
-                x : 'center',
-                y : 'bottom',
-                data:['Gastos','Receitas','Investimentos']
+            toolbox: {
+                show: true,
+                feature: {
+                    saveAsImage: {
+                        show: true,
+                        title: "Salvar"
+                    }
+                }
             },
-            calculable : true,
-            series : [
+            legend: {
+                x: 'center',
+                y: 'bottom',
+                data: ['Gastos', 'Receitas', 'Investimentos'],
+                textStyle: {
+                    fontSize: 15
+                }
+            },
+            calculable: true,
+            series: [
                 {
                     name: "Finanças",
-                    type:'pie',
-                    radius : '50%',
-                    center : ['50%', '50%'],
-                    itemStyle : {
-                        normal : {
-                            label : {
-                                show : false
+                    type: 'pie',
+                    radius: ['20%', '70%'],
+                    center: ['50%', '45%'],
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: false
                             },
-                            labelLine : {
-                                show : false
+                            labelLine: {
+                                show: false
                             }
                         },
-                        emphasis : {
-                            label : {
-                                show : true,
+                        emphasis: {
+                            label: {
+                                show: true,
                                 position: 'center',
-                                textStyle : {
-                                    fontSize : '10',
-                                    fontWeight : 'bold'
+                                textStyle: {
+                                    fontSize: '20',
+                                    fontWeight: 'bold'
                                 }
                             },
-                            labelLine : {
-                                show : true
+                            labelLine: {
+                                show: true
                             }
                         }
                     },
-                    data:[]
+                    data: []
                 }
             ]
         }
+
+        let optionsBarGraph = {
+            tooltip: {
+                trigger: 'item'
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    saveAsImage: {
+                        show: true,
+                        title: "Salvar"
+                    }
+                }
+            },
+            calculable: true,
+            grid: {
+                borderWidth: 0,
+                y: 80,
+                y2: 60
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    show: true,
+                    data: []
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    show: false
+                }
+            ],
+            series: [
+                {
+                    name: 'Finanças Por Tipo',
+                    type: 'bar',
+                    itemStyle: {
+                        normal: {
+                            color: function (params) {
+                                var colorList = [
+                                    '#C1232B', '#B5C334', '#FCCE10', '#E87C25', '#27727B',
+                                    '#FE8463', '#9BCA63', '#FAD860', '#F3A43B', '#60C0DD',
+                                    '#D7504B', '#C6E579', '#F4E001', '#F0805A', '#26C0C0',
+                                ];
+                                return colorList[params.dataIndex]
+                            },
+                            label: {
+                                show: true,
+                                position: 'top',
+                                formatter: '{b}\n{c}'
+                            }
+                        }
+                    },
+                    data: []
+                }
+            ]
+        };
 
         const financasPercent = {
             total: 0,
             gastos: 0,
             investimentos: 0,
-            receitas: 0 
+            receitas: 0
         }
 
-        const getData = () =>{
+        const getData = () => {
             $scope.categList = {
                 gastos: [
-                    {nome:"alimentação", tipo:"básica"},
-                    {nome:"automóvel", tipo:"estilo de vida"},
-                    {nome:"beleza", tipo:"estilo de vida"},
-                    {nome:"bem estar", tipo:"estilo de vida"},
-                    {nome:"educação", tipo:"básica"},
-                    {nome:"empregados", tipo:"estilo de vida"},
-                    {nome:"familiares", tipo:"básica"},
-                    {nome:"impostos e tarifas", tipo:"básica"},
-                    {nome:"lazer", tipo:"estilo de vida"},
-                    {nome:"moradia", tipo:"básica"},
-                    {nome:"outras", tipo:"estilo de vida"},
-                    {nome:"pessoais", tipo:"estilo de vida"},
-                    {nome:"previdência", tipo:"básica"},
-                    {nome:"saúde", tipo:"básica"},
-                    {nome:"seguro", tipo:"básica"},
-                    {nome:"telefonia/tv/internet", tipo:"estilo de vida"},
-                    {nome:"transporte", tipo:"básica"},
-                    {nome:"vestuário", tipo:"estilo de vida"}
+                    { nome: "alimentação", tipo: "básica" },
+                    { nome: "automóvel", tipo: "estilo de vida" },
+                    { nome: "beleza", tipo: "estilo de vida" },
+                    { nome: "bem estar", tipo: "estilo de vida" },
+                    { nome: "educação", tipo: "básica" },
+                    { nome: "empregados", tipo: "estilo de vida" },
+                    { nome: "familiares", tipo: "básica" },
+                    { nome: "impostos e tarifas", tipo: "básica" },
+                    { nome: "lazer", tipo: "estilo de vida" },
+                    { nome: "moradia", tipo: "básica" },
+                    { nome: "outras", tipo: "estilo de vida" },
+                    { nome: "pessoais", tipo: "estilo de vida" },
+                    { nome: "previdência", tipo: "básica" },
+                    { nome: "saúde", tipo: "básica" },
+                    { nome: "seguro", tipo: "básica" },
+                    { nome: "telefonia/tv/internet", tipo: "estilo de vida" },
+                    { nome: "transporte", tipo: "básica" },
+                    { nome: "vestuário", tipo: "estilo de vida" }
                 ],
                 receitas: [
-                    {nome:"aluguel", tipo:"dinheiro do mês"},
-                    {nome:"lucros", tipo:"dinheiro do mês"},
-                    {nome:"pró-labore", tipo:"dinheiro do mês"},
-                    {nome:"rendimentos", tipo:"dinheiro do mês"},
-                    {nome:"salário", tipo:"dinheiro do mês"}
+                    { nome: "aluguel", tipo: "dinheiro do mês" },
+                    { nome: "lucros", tipo: "dinheiro do mês" },
+                    { nome: "pró-labore", tipo: "dinheiro do mês" },
+                    { nome: "rendimentos", tipo: "dinheiro do mês" },
+                    { nome: "salário", tipo: "dinheiro do mês" }
                 ],
-                investimentos:[
-                    {nome:"investimento/consórcio", tipo:"despesa investimento"},
-                    {nome:"investimento/poupança", tipo:"despesa investimento"},
-                    {nome:"quitação de dívidas", tipo:"despesa investimento"}
+                investimentos: [
+                    { nome: "investimento/consórcio", tipo: "despesa investimento" },
+                    { nome: "investimento/poupança", tipo: "despesa investimento" },
+                    { nome: "quitação de dívidas", tipo: "despesa investimento" }
                 ]
             }
         }
 
-        const openModalCreate = (typeAdd) =>{
+        const openModalCreate = (typeAdd) => {
             $scope.typeAdd = typeAdd
             const template = `
             <div class="row" ng-controller="FinancasCtrl" ng-init="getData()">
@@ -147,41 +241,42 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
                     </button>
                 </div>
             </div>
-            ` 
+            `
             const x = $scope
             return Notify.openModalTemplate(template, x)
-            .closePromise.then((res)=>{
-                if(res && res.value && res.value.added){
-                    res.value.id = $scope.idFinance
-                    $scope.idFinance++
-                    switch(res.value.tipo){
-                        case "gastos":
+                .closePromise.then((res) => {
+                    if (res && res.value && res.value.added) {
+                        res.value.id = $scope.idFinance
+                        $scope.idFinance++
+                        switch (res.value.tipo) {
+                            case "gastos":
 
-                        $scope.financeData.graphData[0].value += res.value.value
-                        break
+                                $scope.financeData.graphData[0].value += res.value.value
+                                break
 
-                        case "receitas":
-                        $scope.financeData.graphData[1].value += res.value.value
-                        break
+                            case "receitas":
+                                $scope.financeData.graphData[1].value += res.value.value
+                                break
 
-                        case "investimentos":
-                        $scope.financeData.graphData[2].value += res.value.value
-                        break
+                            case "investimentos":
+                                $scope.financeData.graphData[2].value += res.value.value
+                                break
+                        }
+
+                        $scope.financeData.list.push(res.value)
+                        $scope.financeData.graphBarData[res.value.category.nome]++
+                        toastr.success(`Finança adicionada com sucesso!`, 'Adicionado com sucesso')
                     }
-
-                    $scope.financeData.list.push(res.value)
-                    toastr.success(`Finança adicionada com sucesso!`, 'Adicionado com sucesso')
-                }
-                generateGraph()
-            })
+                    generateGraph()
+                })
         }
 
         const validateFields = (finance) => {
-            if (!finance.name){
+            if (!finance.name) {
                 toastr.error(`Por Favor, digite o campo nome`, 'Problema nos campos')
-            } else if (!finance.value){
+            } else if (!finance.value) {
                 toastr.error(`Por Favor, digite o campo valor`, 'Problema nos campos')
-            } else if (!finance.category){
+            } else if (!finance.category) {
                 toastr.error(`Por Favor, selecione uma categoria`, 'Problema nos campos')
             } else {
                 finance.added = true
@@ -192,28 +287,46 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
 
         const removeFromListFinaces = (finance) => {
             const indexFoundedFinance = $scope.financeData.list.indexOf(finance)
-            switch($scope.financeData.list[indexFoundedFinance].tipo){
+            switch ($scope.financeData.list[indexFoundedFinance].tipo) {
                 case "gastos":
-                $scope.financeData.graphData[0].value -= $scope.financeData.list[indexFoundedFinance].value
-                break
+                    $scope.financeData.graphData[0].value -= $scope.financeData.list[indexFoundedFinance].value
+                    break
 
                 case "receitas":
-                $scope.financeData.graphData[1].value -= $scope.financeData.list[indexFoundedFinance].value
-                break
+                    $scope.financeData.graphData[1].value -= $scope.financeData.list[indexFoundedFinance].value
+                    break
 
                 case "investimentos":
-                $scope.financeData.graphData[2].value -= $scope.financeData.list[indexFoundedFinance].value
-                break
+                    $scope.financeData.graphData[2].value -= $scope.financeData.list[indexFoundedFinance].value
+                    break
             }
-            $scope.financeData.list.splice(indexFoundedFinance,1)
+            $scope.financeData.graphBarData[finance.category.nome]--
+            $scope.financeData.list.splice(indexFoundedFinance, 1)
             generateGraph()
             toastr.success(`Finança deletada com sucesso!`, 'Deletado com sucesso')
         }
 
         const generateGraph = () => {
             const pieChart = echarts.init(document.getElementById('categoryGraph'))
-            optionsPieGraph.series[0].data = $scope.financeData.graphData   
+            const barChart = echarts.init(document.getElementById('rankGraph'))
+
+            optionsPieGraph.series[0].data = $scope.financeData.graphData
+
+            const keys = Object.keys($scope.financeData.graphBarData)
+            const valueAxisX = []
+            const valuesGraph = []
+            for (let i = 0; i < keys.length; i++) {
+                if ($scope.financeData.graphBarData[keys[i]] > 0) {
+                    valueAxisX.push(keys[i])
+                    valuesGraph.push($scope.financeData.graphBarData[keys[i]])
+                }
+            }
+
+            optionsBarGraph.xAxis.data = valueAxisX
+            optionsBarGraph.series[0].data = valuesGraph
+
             pieChart.setOption(optionsPieGraph)
+            barChart.setOption(optionsBarGraph)
         }
 
         const openModalAbout = () => {
@@ -267,9 +380,9 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
             `
 
             return Notify.openModalTemplate(template)
-            .closePromise.then((res)=>{
-                generateGraph()
-            })
+                .closePromise.then((res) => {
+                    generateGraph()
+                })
         }
 
         const makeAnalisis = () => {
@@ -278,35 +391,35 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
             let totalEstiloDeVida = 0
             let totalInvestimentos = 0
             $scope.gastoAnormalList = []
-            for(var i = 0; i < $scope.financeData.list.length; i++){
-                if($scope.financeData.list[i].category.tipo === 'básica'){
+            for (var i = 0; i < $scope.financeData.list.length; i++) {
+                if ($scope.financeData.list[i].category.tipo === 'básica') {
                     totalBasico += $scope.financeData.list[i].value
                 }
 
-                if($scope.financeData.list[i].category.tipo === 'dinheiro do mês'){
+                if ($scope.financeData.list[i].category.tipo === 'dinheiro do mês') {
                     totalRenda += $scope.financeData.list[i].value
                 }
 
-                if($scope.financeData.list[i].category.tipo === 'estilo de vida'){
+                if ($scope.financeData.list[i].category.tipo === 'estilo de vida') {
                     totalEstiloDeVida += $scope.financeData.list[i].value
                 }
 
-                if($scope.financeData.list[i].category.tipo === 'despesa investimento'){
+                if ($scope.financeData.list[i].category.tipo === 'despesa investimento') {
                     totalInvestimentos += $scope.financeData.list[i].value
                 }
             }
 
 
 
-            if((totalBasico / totalRenda) > 0.5){
+            if ((totalBasico / totalRenda) > 0.5) {
                 $scope.gastoAnormalList.push("Gastos Basicos")
             }
 
-            if((totalEstiloDeVida / totalRenda) > 0.35){
+            if ((totalEstiloDeVida / totalRenda) > 0.35) {
                 $scope.gastoAnormalList.push("Estilo de Vida")
             }
 
-            if((totalInvestimentos / totalRenda) > 0.15){
+            if ((totalInvestimentos / totalRenda) > 0.15) {
                 $scope.gastoAnormalList.push("Investimentos")
             }
 
@@ -315,13 +428,13 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
 
         const openModalConfirm = (finance) => {
             return Notify.openConfirm()
-            .then((res)=>{
-                removeFromListFinaces(finance)
-            })
-            .catch((err)=>{
-                toastr.info(`Sua finança esta sã e salva`, 'Não se preocupe :)')
-            })
-        } 
+                .then((res) => {
+                    removeFromListFinaces(finance)
+                })
+                .catch((err) => {
+                    toastr.info(`Sua finança esta sã e salva`, 'Não se preocupe :)')
+                })
+        }
 
         generateGraph()
 
@@ -331,5 +444,5 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
         $scope.makeAnalisis = makeAnalisis
         $scope.validateFields = validateFields
         $scope.openModalConfirm = openModalConfirm
-    }   
+    }
 ])
