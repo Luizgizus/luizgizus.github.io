@@ -264,7 +264,7 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
                         }
 
                         $scope.financeData.list.push(res.value)
-                        $scope.financeData.graphBarData[res.value.category.nome]++
+                        $scope.financeData.graphBarData[res.value.category.nome] += res.value.value
                         toastr.success(`Finança adicionada com sucesso!`, 'Adicionado com sucesso')
                     }
                     generateGraph()
@@ -300,7 +300,7 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
                     $scope.financeData.graphData[2].value -= $scope.financeData.list[indexFoundedFinance].value
                     break
             }
-            $scope.financeData.graphBarData[finance.category.nome]--
+            $scope.financeData.graphBarData[finance.category.nome] -= finance.value
             $scope.financeData.list.splice(indexFoundedFinance, 1)
             generateGraph()
             toastr.success(`Finança deletada com sucesso!`, 'Deletado com sucesso')
@@ -322,7 +322,7 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
                 }
             }
 
-            optionsBarGraph.xAxis.data = valueAxisX
+            optionsBarGraph.xAxis[0].data = valueAxisX
             optionsBarGraph.series[0].data = valuesGraph
 
             pieChart.setOption(optionsPieGraph)
