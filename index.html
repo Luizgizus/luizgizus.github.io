@@ -40,7 +40,7 @@
                                     <i class="fa fa-plus"></i>
                                 </span>
                             </div>
-                            <button class="btn btn-block blue-color" ng-click="openModalCreate('gastos')">
+                            <button class="btn btn-block blue-color" ng-click="openModalCreate('Gastos')">
                                 Criar Gasto
                             </button>
                         </div>
@@ -51,7 +51,7 @@
                                     <i class="fa fa-plus"></i>
                                 </span>
                             </div>
-                            <button class="btn btn-block blue-color" ng-click="openModalCreate('receitas')">
+                            <button class="btn btn-block blue-color" ng-click="openModalCreate('Receitas')">
                                 Criar Receita
                             </button>
                         </div>
@@ -62,7 +62,7 @@
                                     <i class="fa fa-plus"></i>
                                 </span>
                             </div>
-                            <button class="btn btn-block blue-color" ng-click="openModalCreate('investimentos')">
+                            <button class="btn btn-block blue-color" ng-click="openModalCreate('Investimentos')">
                                 Criar Investimento
                             </button>
                         </div>
@@ -92,7 +92,7 @@
                                             <td>{{data.tipo}}</td>
                                             <td>{{data.category.nome}}</td>
                                             <td>{{data.category.tipo}}</td>
-                                            <td>{{data.value}}</td>
+                                            <td>{{"R$" + data.value.toFixed(2).replace(".", ",")}}</td>
                                             <td class="text-center">
                                                 <button class="btn btn-danger btn-small" ng-click="openModalConfirm(data)">
                                                     <i class="fa fa-trash"></i>

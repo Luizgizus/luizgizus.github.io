@@ -174,7 +174,7 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
 
         const getData = () => {
             $scope.categList = {
-                gastos: [
+                Gastos: [
                     { nome: "Alimentação", tipo: "Básica" },
                     { nome: "Automóvel", tipo: "Estilo de vida" },
                     { nome: "Beleza", tipo: "Estilo de vida" },
@@ -194,14 +194,14 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
                     { nome: "Transporte", tipo: "Básica" },
                     { nome: "Vestuário", tipo: "Estilo de vida" }
                 ],
-                receitas: [
+                Receitas: [
                     { nome: "Aluguel", tipo: "Dinheiro do mês" },
                     { nome: "Lucros", tipo: "Dinheiro do mês" },
                     { nome: "Pró-labore", tipo: "Dinheiro do mês" },
                     { nome: "Rendimentos", tipo: "dinheiro do mês" },
                     { nome: "Salário", tipo: "Dinheiro do mês" }
                 ],
-                investimentos: [
+                Investimentos: [
                     { nome: "Investimento/consórcio", tipo: "despesa investimento" },
                     { nome: "Investimento/poupança", tipo: "despesa investimento" },
                     { nome: "Quitação de dívidas", tipo: "despesa investimento" }
@@ -249,16 +249,16 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
                         res.value.id = $scope.idFinance
                         $scope.idFinance++
                         switch (res.value.tipo) {
-                            case "gastos":
+                            case "Gastos":
 
                                 $scope.financeData.graphData[0].value += res.value.value
                                 break
 
-                            case "receitas":
+                            case "Receitas":
                                 $scope.financeData.graphData[1].value += res.value.value
                                 break
 
-                            case "investimentos":
+                            case "Investimentos":
                                 $scope.financeData.graphData[2].value += res.value.value
                                 break
                         }
