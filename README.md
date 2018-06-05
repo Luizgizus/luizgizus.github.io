@@ -1,13 +1,13 @@
 
 # minhasfinanças 
 
+Feito por: Bruna da Silva Gonçalves, Luiz Henrique Silva Jesus.
+</br>
+Curso de Engenharia de Software, 4º Período. 
+</br>
 Aplicativo Web de finanças pessoais para a matéria de Interação Humano-Computador com base no método 50-35-15.
 </br> 
 Você pode conhecer mais sobre esse metódo <a  href="https://blog.guiabolso.com.br/2014/06/10/voce-conhece-regra-50-15-35/"> aqui. </a>  
-Curso de Engenharia de Software, 4º Período. 
-<br> 
-
-Feito por: Bruna da Silva Gonçalves, Luiz Henrique Silva Jesus.
 </br></br></br>
 Caso de uso 1: Adicionar gastos mensais. </br>
 Caso de uso 2: Adicionar receita mensais. </br>
