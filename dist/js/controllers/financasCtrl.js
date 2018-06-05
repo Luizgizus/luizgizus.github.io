@@ -77,7 +77,7 @@ app.controller("FinancasCtrl", ['$scope', 'Notify', 'toastr',
                 {
                     name: "Finanças",
                     type: 'pie',
-                    radius: ['20%', '70%'],
+                    radius: ['20%', '50%'],
                     center: ['50%', '45%'],
                     itemStyle: {
                         normal: {
